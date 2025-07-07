@@ -531,6 +531,16 @@ def predict(request: PredictionRequest):
             llm_explanations=explanations_dict,
             top_features=[f.feature for f in top_shap_feats]
         )
+        for raw_name, score_dict in alignment_scores.items():
+            model_key = model_name_mapping.get(raw_name.strip().lower())
+            if model_key and model_key in llm_scores:
+                total_score = (
+                    score_dict["feature_coverage"]
+                    + score_dict["bleu"]
+                    + score_dict["rouge1"]
+                    + score_dict["rougeL"]
+                )
+                llm_scores[model_key] += round(total_score, 2)
         print("\n🧠 Alignment with Domain Knowledge (SHAP-based):")
         print(alignment_scores)
 
