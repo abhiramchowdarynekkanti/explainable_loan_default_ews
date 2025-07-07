@@ -3,20 +3,38 @@ from typing import List, Dict
 from difflib import SequenceMatcher
 from sentence_transformers import SentenceTransformer, util
 from app.feature_aliases import FEATURE_ALIASES
+from nltk.translate.bleu_score import sentence_bleu, SmoothingFunction
+from rouge_score import rouge_scorer
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
+rouge = rouge_scorer.RougeScorer(['rouge1', 'rougeL'], use_stemmer=True)
+smoothie = SmoothingFunction().method4
 
 def split_into_sentences(text: str):
     return re.split(r'[.?!]\s+', text.strip())
+
+def compute_bleu_rouge_scores(reference: str, hypothesis: str) -> dict:
+    ref_tokens = reference.lower().split()
+    hyp_tokens = hypothesis.lower().split()
+
+    bleu_score = sentence_bleu([ref_tokens], hyp_tokens, smoothing_function=smoothie)
+    rouge_scores = rouge.score(reference, hypothesis)
+
+    return {
+        "bleu": round(bleu_score, 4),
+        "rouge1": round(rouge_scores["rouge1"].fmeasure, 4),
+        "rougeL": round(rouge_scores["rougeL"].fmeasure, 4),
+    }
 
 def compute_alignment_with_domain_knowledge(
     llm_explanations: Dict[str, str],
     top_features: List[str],
     threshold_fuzzy: float = 0.7,
     threshold_semantic: float = 0.6
-) -> Dict[str, float]:
+) -> Dict[str, Dict[str, float]]:
     """
-    Alignment with Domain Knowledge: Check if the top SHAP features are mentioned in LLM explanations.
+    Alignment with Domain Knowledge:
+    Combines feature mention check with BLEU and ROUGE metrics.
     """
     def is_feature_mentioned(feature: str, explanation_sentences: List[str]) -> bool:
         candidates = set()
@@ -44,14 +62,28 @@ def compute_alignment_with_domain_knowledge(
         return False
 
     scores = {}
+    reference_summary = " ".join([f.lower().replace('_', ' ') for f in top_features])
+
     for model_name, explanation in llm_explanations.items():
         if not explanation.strip():
-            scores[model_name] = 0.0
+            scores[model_name] = {
+                "feature_coverage": 0.0,
+                "bleu": 0.0,
+                "rouge1": 0.0,
+                "rougeL": 0.0,
+            }
             continue
 
         explanation_sentences = split_into_sentences(explanation)
         matches = sum(is_feature_mentioned(feat, explanation_sentences) for feat in top_features)
-        scores[model_name] = round(matches / len(top_features), 2) if top_features else 0.0
+        feature_coverage = round(matches / len(top_features), 2) if top_features else 0.0
+
+        bleu_rouge = compute_bleu_rouge_scores(reference_summary, explanation)
+
+        scores[model_name] = {
+            "feature_coverage": feature_coverage,
+            **bleu_rouge
+        }
 
     return scores
 
