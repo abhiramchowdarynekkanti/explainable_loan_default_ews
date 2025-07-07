@@ -1,0 +1,36 @@
+timestamp,sample_id,model_name,explanation
+2025-07-07T10:00:20.042730,158,groq,"The Bank predicts that the loan application will be rejected due to the presence of increased risk factors. The applicant's credit score from External Credit Score Source 2 and Source 1 is 0.50, indicating a higher risk. Additionally, the Days Since Credit (Max) and Total Credit Amount (Max) features suggest a potential credit risk. These factors, combined with the applicant's age and employment duration, outweigh the positive effects of other features, leading to a predicted rejection of the loan application."
+2025-07-07T10:00:20.042730,158,chatglm,"The Bank predicts a high risk associated with the loan application due to the applicant's external credit scores from two sources being below acceptable thresholds, the total credit amount exceeding the maximum advisable limit, and an insufficient employment duration. However, the application also presents mitigating factors such as a stable product type, higher down payment sums, and a positive history of credit utilization, which slightly decrease the perceived risk. Considering the overall risk profile, the Bank will proceed with caution and may require additional information or conditions to mitigate the identified risks."
+2025-07-07T10:00:20.042730,158,qwen,"<think>
+Okay, let's tackle this. The user wants a concise explanation for a loan decision based on SHAP and LIME analyses. The key is to start with either ""The Bank predicts..."" or ""Your application indicates..."". I need to focus on the risk factors mentioned in SHAP and also incorporate the LIME factors.
+
+First, looking at the SHAP risk factors: the credit scores from both sources are 0.50, which is below the minimum thresholds (650-700). That's a big red flag. Then, the days since credit (max"
+2025-07-07T10:00:20.042730,158,mistral,"The Bank predicts a higher risk associated with your loan application. Key factors contributing to this assessment include a lower credit score from both external sources, which indicates a higher likelihood of default. Additionally, the loan amount requested is significantly above average, and the employment duration is below the typical requirement for private sector banks. These factors, combined with other risk indicators such as the timing of your application and the age of your credit history, suggest a need for further evaluation to ensure repayment capability."
+2025-07-07T10:00:20.042730,158,mixtral,"The Bank predicts a higher risk associated with this loan application, primarily due to the applicant's credit scores from External Credit Score Sources 1 and 2, which are below the preferred threshold of 750. The applicant's total credit amount, employment duration, and days since credit initiation also contribute to the increased risk, as they exceed the typical limits and fall outside the preferred ranges for loan tenure and employment stability. Furthermore, the SHAP analysis highlights the negative impact of the applicant's credit history and employment duration on the loan decision, which is only partially mitigated by positive factors such as the applicant's"
+2025-07-07T10:00:20.042730,158,gemma,"The Bank predicts a high risk for this loan application.  The applicant's external credit scores from both sources fall below the generally accepted minimum for loan approval, indicating a potential higher likelihood of default.  Additionally, the applicant's 'Days Since Credit (Max)' is significantly negative, suggesting a possibility of  exceeding typical maximum loan tenures, and their 'Total Credit Amount (Max)' is considerably high, raising concerns about existing debt burden."
+2025-07-07T10:00:20.042730,158,gpt2,"Generate a concise explanation for a loan decision:
+
+Key risk factors identified by SHAP analysis:
+- External Credit Score Source 2 = 0.50 (increased risk). Supporting facts:
+  - Credit scores above 750 increase the likelihood of approval.
+  - Loan amounts range from INR 2,00,000 to INR 40 Cr (varies by lender).
+  - Minimum acceptable CIBIL score ranges from 650 to 700 depending on the financial institution.
+- External Credit Score Source 1 = 0.50 (increased risk). Supporting facts:
+  - Private banks may use digital footprints like bill payments and past credit card usage to influence eligibility.
+- Days Since Credit (Max) = -300.00 (increased risk). Supporting facts:
+  - Typical maximum loan tenures: 30 years (age  40), 25 years (age = 45).
+  - Most lenders consider age between 21 and 65 years as eligible.
+- Total Credit Amount (Max) = 900704.23 (increased risk). Supporting facts:
+  - Net annual income thresholds: INR 5L (salaried), INR 7.5L (self-employed).
+- Total Credit Amount (Mean) = 351942.67 (increased risk). This feature typically impacts risk based on model behavior.
+- Application Start Hour (Mean) = 12.75 (increased risk). Supporting facts:
+  - Employment requirements: salaried (2+ years), self-employed (2–3+ years).
+  - Public sector banks generally accept applicants with a minimum age ranging from 18 to 21 years.
+- Days Since ID Published = 0.00 (increased risk). Supporting facts:
+  - Individuals above 18 years with a stable income source are generally eligible.
+- Years Since Exploitation Began (Avg) = 0.98 (increased risk). Supporting facts:
+  - Loan tenure typically reduces as applicant age increases.
+- Total Credit Amount (Sum) = 1813502.67 (increased risk). This feature typically impacts risk based on model behavior.
+- Employment Duration (days) = -2222.00 (increased risk). Supporting facts:
+  - Private sector banks typically require 2 years of continuous employment or 3 years in business.
+- PREVAPP_DAYS_FIRST_DRAWING_MEAN = -365243.00 (increased risk). This feature typically impacts negative impact based upon model behaviour.  - Yearly pre-employment workday in each quarter is 1 month of duration."
